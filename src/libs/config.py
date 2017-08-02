@@ -40,13 +40,9 @@ def get_config(**kwargs):
     if __config is None:
         config = ConfigParser.ConfigParser()
         # the path is `conf` dir under root dir.
-        bs_config_file = kwargs.get('bs_config', 'bs.cfg')
-        update_config_file = kwargs.get('update_config', 'update.cfg')
-        config_files = [
-            abs_dir(bs_config_file),
-            abs_dir(update_config_file),
-        ]
-        config.read(config_files)
+        config_file = kwargs.get('conf', 'online.cfg')
+        config_file = abs_dir(config_file),
+        config.read(config_file)
 
     return config
 

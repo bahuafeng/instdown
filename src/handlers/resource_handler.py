@@ -17,6 +17,8 @@ class ResourceHandler(tornado.web.RequestHandler):
         """
         logger = libs.log.get_logger('resource')
         try:
+            ip = self.request.remote_ip
+            ua = self.request.headers.get("User-Agent")
             instagram_url = self.get_argument('url')
             resource_url = models.parser.parse(instagram_url)
         except Exception as e:
@@ -25,12 +27,17 @@ class ResourceHandler(tornado.web.RequestHandler):
                 errmsg = str(e),
                 data = None,
             )
+            logger.error('error', e)
         else:
             ret = dict(
                 errno = 0,
                 errmsg = 'success',
                 data = resource_url
             )
+            logger.info(
+                url=instagram_url,
+                resource_url=resource_url,
+                ip=ip, ua=ua)
         finally:
             self.write(json.dumps(ret))
 

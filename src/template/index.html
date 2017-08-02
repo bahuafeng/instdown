@@ -1,0 +1,40 @@
+<html>
+    <head>
+    <title>template function test</title>
+    <script type="text/javascript" src="{{ static_url('js/jquery.js') }}"></script>
+    <script type="text/javascript">
+        function load_resource(){
+            instgram_url = encodeURIComponent($("#instgram_url").val());
+            $.ajax({  
+                type: "GET",  
+                url: "{{instdown_api}}",  
+                data: "url="+instgram_url,
+  
+                success: function(data) {  
+                    if(data != "") {
+                        data = $.parseJSON(data);
+                        if (data.data.video != null){
+                            $("#video").html(data.data.video);
+                        }
+                        if (data.data.image != null){
+                            $("#image").html(data.data.image);
+                        }
+                    }else {  
+                        alert("fail comment!");  
+                    }  
+                }  
+            });  
+        };
+    </script>
+    </head>
+    <form>
+        <input id='instgram_url'/>
+        <button type="button" onclick="load_resource()" >get</button>
+        <div id='result'>
+            <div id='video'></div>
+            <div id='image'></div>
+        </div>
+    </form>
+    <body>
+    </body>
+</html>

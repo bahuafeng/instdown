@@ -9,21 +9,28 @@ import tornado.netutil
 import tornado.process
 from tornado import web
 from tornado import ioloop
+from handlers.resource_handler import ResourceHandler
+from handlers.index_handler import IndexHandler
+import os
+import sys
 
 error_logger = libs.log.get_logger('error')
-config = libs.config.get_config()
-
+config = libs.config.get_config(conf='online.cfg')
 
 def initialize(debug=False):
     """ Initialize something.
     """
-    global application
+    global application, config
     settings = {
-            'debug': debug,
-            }
+        'debug': debug,
+        "static_path": os.path.join(os.path.dirname(__file__), "static"),
+    }
+    if debug:
+        config = libs.config.get_config(conf='offline.cfg')
     application = web.Application([
         # ad handler
-        (r'/instdown/res', CateADHandler, dict(log=cate_ad_logger, root_log=root_logger)),
+        (r'/instdown/resource', ResourceHandler),
+        (r'/', IndexHandler),
     ], **settings)
 
 
@@ -44,15 +51,14 @@ def start_debug_server():
     """
     initialize(debug=True)
     global config, application
-    sockets = tornado.netutil.bind_sockets(config.get('server_debug', 'port'))
+    sockets = tornado.netutil.bind_sockets(config.get('server', 'port'))
     server = tornado.httpserver.HTTPServer(application)
     server.add_sockets(sockets)
     ioloop.IOLoop.instance().start()
 
 
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv) > 1 and sys.argv[1] == 'debug':
+    if len(sys.argv) > 1 and sys.argv[1] == '--debug':
         start_debug_server()
     else:
         start_server_mulp()
