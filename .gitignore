@@ -3,3 +3,5 @@ log
 *~
 *.pyc
 instdown.pid
+conf
+.gitignore
