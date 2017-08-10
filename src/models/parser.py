@@ -29,6 +29,8 @@ def _parse(content):
     video = tree.xpath('//meta[@property="og:video"]')
     img_url = None if empty(img) else img[0].get('content')
     video_url = None if empty(video) else video[0].get('content')
+    if video_url is not None:
+        img_url = None
     return dict(image=img_url, video=video_url)
 
 if __name__ == '__main__':
