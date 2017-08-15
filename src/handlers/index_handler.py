@@ -10,8 +10,15 @@ Brief: TODO
 """
 
 import tornado.web
+import libs.log
 
 class IndexHandler(tornado.web.RequestHandler):
+    """ index page
+    """
     def get(self):
+        logger = libs.log.get_logger('index')
         instdown_api = "/instdown/resource"
+        ip = self.request.remote_ip
+        ua = self.request.headers.get("User-Agent")
         self.render("../template/index.html", instdown_api=instdown_api)
+        logger.info(ip=ip, ua=ua)
