@@ -21,7 +21,7 @@ start(){
     echo "starting..."
     cd $src_dir
     nohup $python_bin $src_dir/instdown_server.py > $SERVICE_LOG 2>&1 &
-    if [ $? -ne 0 ]
+    if [ "$?" -ne "0" ];
     then 
         echo "start failed, please check the log!"
         tail -30 $SERVICE_LOG
@@ -51,7 +51,7 @@ debug(){
 
 stop(){
     echo "stopping..."
-    kill -9 `cat $SERVICE_PID` 
+    ps -ef | grep  `cat $SERVICE_PID` | grep  "instdown_server.py" | awk '{print $2}' | xargs kill -9
     if [ $? -ne 0 ]
     then 
         echo "stop failed, may be $SERVICE isn't running"
