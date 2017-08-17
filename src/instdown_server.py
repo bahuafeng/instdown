@@ -31,6 +31,7 @@ def initialize(debug=False):
         # ad handler
         (r'/instdown/resource', ResourceHandler),
         (r'/', IndexHandler),
+        web.URLSpec(r"/(.*)", web.StaticFileHandler, {"path": "static"}),  
     ], **settings)
 
 
